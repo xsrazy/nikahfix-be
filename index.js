@@ -44,7 +44,7 @@ app.post('/wish', async (req, res) => {
       .eq('name', name.toLowerCase());
     if (getWishs.error) {
       return res.status(500).send({
-        message: 'failed insert data',
+        message: getWishs.error.message || 'failed insert data',
       });
     }
     if (getWishs.data && getWishs.data.length > 0) {
@@ -55,14 +55,14 @@ app.post('/wish', async (req, res) => {
     const nameLower = name.toLowerCase();
     const insert = await supabaseDatabase.from('wishs').insert(
       {
-        nameLower,
+        name: nameLower,
         message,
       },
       { returning: 'minimal' }
     );
     if (insert.error) {
       return res.status(500).send({
-        message: 'failed insert data',
+        message: insert.error.message || 'failed insert data',
       });
     }
     return res.status(200).send({
