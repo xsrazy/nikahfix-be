@@ -33,6 +33,11 @@ app.get('/', (req, res) => {
 app.post('/wish', async (req, res) => {
   try {
     const { name, message } = req.body;
+    if (!name || name.length < 3 || !message) {
+      return res.status(400).send({
+        message: `bad input user`,
+      });
+    }
     const getWishs = await supabaseDatabase
       .from('wishs')
       .select('*', { returning: 'minimal' })
