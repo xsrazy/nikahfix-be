@@ -52,9 +52,10 @@ app.post('/wish', async (req, res) => {
         message: `oops you already send wish`,
       });
     }
+    const nameLower = name.toLowerCase();
     const insert = await supabaseDatabase.from('wishs').insert(
       {
-        name,
+        nameLower,
         message,
       },
       { returning: 'minimal' }
