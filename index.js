@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import PinoHttp from 'pino-http';
 import 'dotenv/config';
-import supabaseClient from './supabaseClient.js';
+import supabaseDatabase from './supabaseDatabase.js';
 // env
 const { APP_PORT, APP_NAME } = process.env;
 
@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 app.post('/wish', async (req, res) => {
   try {
     const { name, message } = req.body;
-    const getWishs = await supabaseClient
+    const getWishs = await supabaseDatabase
       .from('wishs')
       .select('*', { returning: 'minimal' })
       .eq('name', name.toLowerCase());
@@ -47,7 +47,7 @@ app.post('/wish', async (req, res) => {
         message: `oops you already send wish`,
       });
     }
-    const insert = await supabaseClient.from('wishs').insert(
+    const insert = await supabaseDatabase.from('wishs').insert(
       {
         name,
         message,
@@ -70,7 +70,7 @@ app.post('/wish', async (req, res) => {
 });
 app.get('/wish', async (req, res) => {
   try {
-    const { data, error } = await supabaseClient
+    const { data, error } = await supabaseDatabase
       .from('wishs')
       .select('*', { returning: 'minimal' });
     if (error) {
